@@ -93,19 +93,9 @@ interface ArticleListResponse {
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const authorization = request.headers.get("authorization");
-    if (!authorization?.startsWith("Bearer")) {
-      return NextResponse.json(
-        {
-          error: "UnAuthorized",
-        },
-        {
-          status: 401,
-        }
-      );
-    }
+  const NAVER_TOKEN = process.env.NAVER_LAND_TOKEN;
 
+  try {
     const searchParams = request.nextUrl.searchParams;
     const params: Partial<ArticleQueryParams> = {
       zoom: searchParams.get("zoom") || "",
@@ -159,7 +149,7 @@ export async function GET(request: NextRequest) {
       `https://new.land.naver.com/api/articles?${searchParams.toString()}`,
       {
         headers: {
-          Authorization: authorization,
+          Authorization: NAVER_TOKEN!,
           Accept: "*/*",
           "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
           Referer: "https://new.land.naver.com/houses",
